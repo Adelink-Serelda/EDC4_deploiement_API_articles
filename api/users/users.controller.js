@@ -37,6 +37,9 @@ class UsersController {
   }
   async update(req, res, next) {
     try {
+      if (!req.user || req.user.role !== "admin") {
+        throw new UnauthorizedError("Admin only");
+      }
       const id = req.params.id;
       const data = req.body;
       const userModified = await usersService.update(id, data);
@@ -48,6 +51,9 @@ class UsersController {
   }
   async delete(req, res, next) {
     try {
+      if (!req.user || req.user.role !== "admin") {
+        throw new UnauthorizedError("Admin only");
+      }
       const id = req.params.id;
       await usersService.delete(id);
       req.io.emit("user:delete", { id });
@@ -69,6 +75,14 @@ class UsersController {
       res.json({
         token,
       });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async me(req, res, next) {
+    try {
+      res.json(req.user);
     } catch (err) {
       next(err);
     }
