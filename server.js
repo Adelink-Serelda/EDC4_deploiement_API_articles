@@ -29,6 +29,9 @@ app.use((req, res, next) => {
 app.use(cors());
 app.use(express.json());
 
+// Route directement dans server.js et non dans user.controller.js pour ne pas passer par le middleware d'authentification
+app.get("/api/users/:id/articles", usersController.getAllArticlesByUser);
+
 app.use("/api/users", authMiddleware, userRouter);
 app.use("/api/articles", authMiddleware, articlesRouter);
 app.post("/login", usersController.login);

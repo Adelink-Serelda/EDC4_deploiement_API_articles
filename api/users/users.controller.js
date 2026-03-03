@@ -3,8 +3,10 @@ const UnauthorizedError = require("../../errors/unauthorized");
 const jwt = require("jsonwebtoken");
 const config = require("../../config");
 const usersService = require("./users.service");
+const articlesService = require("../articles/articles.service");
 
 class UsersController {
+  // Récupérer tous les users
   async getAll(req, res, next) {
     try {
       const users = await usersService.getAll();
@@ -13,6 +15,8 @@ class UsersController {
       next(err);
     }
   }
+
+  // Récupérer un user par son identifiant
   async getById(req, res, next) {
     try {
       const id = req.params.id;
@@ -25,6 +29,19 @@ class UsersController {
       next(err);
     }
   }
+
+  // Récupérer les articles d'un user par son identifiant
+  async getAllArticlesByUser(req, res, next) {
+    try {
+      const userId = req.params.id;
+      const articles = await articlesService.getAllByUser(userId);
+      res.json(articles);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  // Créer un nouvel utilisateur
   async create(req, res, next) {
     try {
       const user = await usersService.create(req.body);
@@ -35,6 +52,8 @@ class UsersController {
       next(err);
     }
   }
+
+  // Mettre à jour / modifier un user
   async update(req, res, next) {
     try {
       if (!req.user || req.user.role !== "admin") {
@@ -49,6 +68,8 @@ class UsersController {
       next(err);
     }
   }
+
+  // Supprimer un user
   async delete(req, res, next) {
     try {
       if (!req.user || req.user.role !== "admin") {
@@ -62,6 +83,8 @@ class UsersController {
       next(err);
     }
   }
+
+  // Se connecter
   async login(req, res, next) {
     try {
       const { email, password } = req.body;
@@ -80,6 +103,7 @@ class UsersController {
     }
   }
 
+  // Récupérer les information de l'user connecté
   async me(req, res, next) {
     try {
       res.json(req.user);

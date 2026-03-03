@@ -9,6 +9,14 @@ class ArticlesService {
     return Article.findById(id);
   }
 
+  // Récupérer tous les articles d'un user donné
+  getAllByUser(userId) {
+    return Article.find({ user: userId }).populate({
+      path: "user",
+      select: "-password",
+    });
+  }
+
   create(data) {
     const article = new Article(data);
     return article.save();

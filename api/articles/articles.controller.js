@@ -4,6 +4,7 @@ const usersController = require("../users/users.controller");
 const articlesService = require("./articles.service");
 
 class ArticlesController {
+  // Récupérer tous les articles existants
   async getAllArticles(req, res, next) {
     try {
       const articles = await articlesService.getAll();
@@ -13,6 +14,7 @@ class ArticlesController {
     }
   }
 
+  // Récupérer un article par son identifiant
   async getArticleById(req, res, next) {
     try {
       const id = req.params.id;
@@ -26,6 +28,7 @@ class ArticlesController {
     }
   }
 
+  // Créer un article
   async createArticle(req, res, next) {
     try {
       const payload = {
@@ -39,6 +42,8 @@ class ArticlesController {
       next(err);
     }
   }
+
+  // Mettre à jour un article
   async updateArticle(req, res, next) {
     try {
       if (!req.user || req.user.role !== "admin") {
@@ -52,6 +57,8 @@ class ArticlesController {
       next(err);
     }
   }
+
+  // Supprimer un article
   async deleteArticle(req, res, next) {
     try {
       if (!req.user || req.user.role !== "admin") {
